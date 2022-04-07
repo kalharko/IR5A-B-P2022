@@ -1,0 +1,22 @@
+#:kivy 2.1.0
+
+
+
+<Map>:
+    Image:
+        center:root.center
+        source: 'Images/map_42x22.png'
+        size_hint: [5,5]
+
+
+
+
+
+<MainWidget>:
+    map: map
+
+    Map:
+        id: map
+        center: root.center
+        size_hint: [5,5]
+

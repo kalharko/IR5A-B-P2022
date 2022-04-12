@@ -3,10 +3,13 @@
 
 
 <Map>:
-    Image:
-        center:root.center
-        source: 'Images/map_42x22.png'
-        size_hint: [5,5]
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: self.texture
+
+
 
 
 
@@ -18,5 +21,5 @@
     Map:
         id: map
         center: root.center
-        size_hint: [5,5]
+        #size: root.size
 

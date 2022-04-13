@@ -30,6 +30,7 @@ class Map(Widget):
         #self.allow_stretch = False
         #self.keep_ratio = True
 
+
     # # Controls
     def on_touch_down(self, touch):
         # Tracks position of touch down
@@ -37,10 +38,18 @@ class Map(Widget):
 
         # Zoom in on the map
         if touch.is_mouse_scrolling:
+            # Transform touch.pos to parent's coordinates
+            touch.push() # Did not understand the doc
+            touch.apply_transform_2d(self.to_parent)
             if touch.button == 'scrolldown':
+                self.x += (touch.x - self.x) * 0.1
+                self.y += (touch.y - self.y) * 0.1
                 self.size = (int(self.size[0]*0.9), int(self.size[1]*0.9))
             elif touch.button == 'scrollup':
+                self.x -= (touch.x - self.x) * 0.1
+                self.y -= (touch.y - self.y) * 0.1
                 self.size = (int(self.size[0]*1.1), int(self.size[1]*1.1))
+            touch.pop() # Did not understand the doc
 
     def on_touch_move(self, touch):
         # Moves canvas following mouse drag

@@ -19,28 +19,26 @@ class Token(Widget):
     y = NumericProperty(0)
     pos = ReferenceListProperty(x, y)
     grid_pos = ListProperty([0,0])
+    grid_origin = ListProperty([0,0])
     texture = StringProperty("")
     size = ListProperty([0,0])
 
-    def move(self, x, y=None):
-        if y == None and type(x) in [type([]), type(())] :
-            y = x[1]
-            x = x[0]
-        self.x += x
-        self.y += y
 
-    def set_grid_pos(self, parent_pos, cell_size=None, grid_pos=None):
-        if grid_pos == None :
-            grid_pos = self.grid_pos
-        if cell_size == None :
-            cell_size = self.size
-        self.x = parent_pos[0] + cell_size[0] * grid_pos[0]
-        self.x = parent_pos[1] + cell_size[1] * grid_pos[1]
+    def reposition(self, grid_origin=None):
+        if grid_origin != None :
+            self.grid_origin = grid_origin
+
+        self.x = self.grid_origin[0] + self.size[0] * self.grid_pos[0]
+        self.y = self.grid_origin[1] + self.size[1] * self.grid_pos[1]
 
     def on_touch_move(self, touch):
-        self.x = touch.x - touch.x % self.size[0]
-        self.y = touch.y - touch.y % self.size[1]
-        self.grid_pos = [touch.x//self.size[0], touch.y//self.size[1]]
+        # self.pos = touch.pos
+        # self.x = touch.x - self.size[0] // 2
+        # self.y = touch.y - self.size[1] // 2
+
+        self.grid_pos[0] = (touch.x - self.grid_origin[0]) // self.size[0]
+        self.grid_pos[1] = (touch.y - self.grid_origin[1]) // self.size[1]
+        self.reposition()
 
 
 class Map(Widget):
@@ -54,22 +52,22 @@ class Map(Widget):
     size = ListProperty([0,0])
     og_size = ListProperty([0,0])
     grid_size = ListProperty([42, 22])
-    cell_size = ListProperty([0,0])
+    cell_size = NumericProperty()
 
     tokens = ListProperty([])
     touch_passed_on = BooleanProperty(False)
 
-    def load_texture(self, path, center=(0,0)):
+    def load_texture(self, path):
         self.texture = path
         im = Image(source=path)
         self.og_size = im.texture_size
         self.size = im.texture_size
-        self.cell_size = [self.size[0]//self.grid_size[0], self.size[1]//self.grid_size[1]]
+        self.cell_size = self.size[0]//self.grid_size[0]
 
     def load_token(self, path):
-        self.tokens.append(Token(pos=self.pos, size=self.cell_size, texture=path))
+        self.tokens.append(Token(grid_pos=[0,0], size=[self.cell_size,self.cell_size], texture=path))
         self.add_widget(self.tokens[-1])
-
+        self.tokens[-1].reposition(self.pos)
 
 
     # # Controls
@@ -84,12 +82,11 @@ class Map(Widget):
 
         # Zoom
         if touch.is_mouse_scrolling :
-            if touch.button == 'scrolldown' :
-                direction = -1
-            else :
-                direction = 1
-            factor = 0.01;
+            direction = 1 if touch.button == 'scrollup' else -1
+            factor = 0.1;
             zoom = 1 * direction * factor;
+            if self.zoom + zoom < 0.1 :
+                return
 
             # compute the weights for x and y
             wx = (touch.x-self.x)/(self.og_size[0]*self.zoom);
@@ -101,6 +98,13 @@ class Map(Widget):
             self.zoom += zoom;
             self.size[0] = int(self.og_size[0] * self.zoom)
             self.size[1] = int(self.og_size[1] * self.zoom)
+            self.cell_size = int(self.size[0] / self.grid_size[0])
+
+            # moves and scale tokens
+            for token in self.tokens :
+                token.size[0] = self.cell_size
+                token.size[1] = self.cell_size
+                token.reposition(self.pos)
 
 
 
@@ -115,9 +119,7 @@ class Map(Widget):
             self.y += touch.y-self.last_pos[1]
 
             for token in self.tokens :
-                token.x += touch.x-self.last_pos[0]
-                token.y += touch.y-self.last_pos[1]
-
+                token.reposition(self.pos)
             self.last_pos = touch.pos
 
     def on_touch_up(self, touch):

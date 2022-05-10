@@ -1,6 +1,8 @@
 # import hell to be delt with later
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.properties import (
     NumericProperty, ReferenceListProperty, ObjectProperty, ListProperty, StringProperty, BooleanProperty
 )
@@ -10,9 +12,30 @@ from kivy.clock import Clock
 from kivy import require
 from kivy.uix.image import Image
 
-#from PIL import Image
+#Connectivity imports
+#from server import VttServer
+from threading import Thread, Lock
+#import client
+
+from os import path
+
+
 
 require('2.1.0')
+
+## Include our own classes :
+import sys
+sys.path.append('./py_files')
+import FileChooserPopup
+
+## Include all the kv files
+from kivy.lang import Builder
+from os import listdir
+kv_path = "./kv_files/"
+for kv in listdir(kv_path):
+    Builder.load_file(kv_path+kv)
+
+
 
 class Token(Widget):
     x = NumericProperty(0)
@@ -81,7 +104,7 @@ class Map(Widget):
         self.last_pos = [touch.x, touch.y]
 
         # Zoom
-        if touch.is_mouse_scrolling :
+        if touch.is_mouse_scrolling and self.texture != "":
             direction = 1 if touch.button == 'scrollup' else -1
             factor = 0.1;
             zoom = 1 * direction * factor;
@@ -133,33 +156,56 @@ class Map(Widget):
 
 
 class MainWidget(Widget):
+    role = NumericProperty(0)
     map = ObjectProperty(None)
+
+    def server_setup(self):
+        # server
+        server_lock = Lock()
+        server = VttServer('Data/game', server_lock)
+        #mainWidget.server_lock = server_lock
+        t = Thread(target=server.run)
+        t.start()
+
+    def load_game(self, name):
+        # map initialization
+        self.map.load_texture("Images/map_42x22.png")
+        self.map.load_token("Images/Token_Red_1.png")
+        self.add_widget(self.map)
+        print("game loaded")
 
     def update(self, dt): #dt as delta time ?
         pass
 
 
 
+class FirstMenuPopup(Popup):
+    path = StringProperty(path.abspath('.'))
+    def launch_as_Player(self):
+        self.dismiss()
+
+    def launch_as_GM(self):
+        self.dismiss()
+
+    def open_file_chooser(self):
+        self.file_chooser = FileChooserPopup()
+
+
 
 
 class VttApp(App):
     def build(self):
-        mainWidget = MainWidget()
+        self.mainWidget = MainWidget()
+        self.mainWidget.map = Map()
+        popup = FirstMenuPopup()
+        popup.open()
+        popup.bind(on_dismiss=self.mainWidget.load_game)
 
-        # map initialization
-        mainWidget.map.load_texture("Images/map_42x22.png")
-        mainWidget.map.load_token("Images/Token_Red_1.png")
-
-        Clock.schedule_interval(mainWidget.update, 1.0 / 60.0)
-        return mainWidget
+        Clock.schedule_interval(self.mainWidget.update, 1.0 / 60.0)
+        return self.mainWidget
 
 
 if __name__ == '__main__':
     VttApp().run()
 
 
-
-#  Image:
-#         center:root.center
-#         source: 'Images/map_42x22.png'
-#         pos: self.pos

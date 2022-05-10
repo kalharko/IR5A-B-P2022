@@ -1,0 +1,63 @@
+#:kivy 2.1.0
+
+
+
+<FirstMenuPopup>:
+    auto_dismiss: False
+    title: 'Setup'
+    size_hint: [0.7, 0.6]
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 30
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+
+            Label:
+                text: 'server ip :'
+                text_size: self.size
+                halign: 'right'
+                valign: 'middle'
+                size_hint: [0.1, 0.1]
+
+            TextInput:
+                multiline: False
+                size_hint: [0.4, 0.1]
+
+        Button:
+            size_hint: [0.4, 0.1]
+            pos_hint_x: 0.5
+            text: 'Launch as player (client)'
+            on_release: root.launch_as_Player()
+
+
+        Separator:
+            rgba: [0.5, 0.5, 0.5, 0.5]
+            size_hint_y: None
+            height: dp(2)
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Label :
+                color: [1,1,1,1]
+                text: root.path
+
+            Button:
+                size_hint: [0.1, 0.1]
+                text: 'Choose a game folder'
+                on_release: root.open_file_chooser()
+
+
+        Button:
+            size_hint: [1, 0.1]
+            text: 'Launch as Game Master (server)'
+            on_release: root.launch_as_GM()
+
+        Separator:
+            rgba: [0.5, 0.5, 0.5, 0.5]
+            size_hint_y: None
+            height: dp(2)

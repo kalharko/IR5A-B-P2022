@@ -4,11 +4,20 @@
 <FileChooserPopup>:
     auto_dismiss: False
     title: 'Chose a game folder'
-    size_hint: [0.5, 0.4]
+    size_hint: [0.9, 0.9]
+
+    file_chooser: file_chooser
 
     BoxLayout:
         orientation: 'vertical'
 
         FileChooserIconView:
+            id:file_chooser
+
+        Button:
+            text: 'Open'
+            size_hint: [0.5, 0.1]
+            on_release: root.dismiss()
+
 
 

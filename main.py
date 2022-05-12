@@ -26,7 +26,7 @@ require('2.1.0')
 ## Include our own classes :
 import sys
 sys.path.append('./py_files')
-import FileChooserPopup
+from FileChooserPopup import FileChooserPopup
 
 ## Include all the kv files
 from kivy.lang import Builder
@@ -188,7 +188,14 @@ class FirstMenuPopup(Popup):
         self.dismiss()
 
     def open_file_chooser(self):
-        self.file_chooser = FileChooserPopup()
+        file_chooser = FileChooserPopup()
+        file_chooser.open()
+        file_chooser.bind(on_dismiss=self.popup_set_path)
+
+        file_chooser.file_chooser.path = path.abspath('.')
+
+    def popup_set_path(self, popup):
+        self.path = popup.file_chooser.path
 
 
 

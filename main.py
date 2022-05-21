@@ -8,6 +8,7 @@ from kivy.properties import (
 )
 from kivy.graphics import Rectangle
 from kivy.vector import Vector
+from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy import require
 from kivy.uix.image import Image
@@ -25,8 +26,16 @@ require('2.1.0')
 
 ## Include our own classes :
 import sys
-sys.path.append('./py_files')
-from FileChooserPopup import FileChooserPopup
+#sys.path.append('./py_files')
+#from FileChooserPopup import FileChooserPopup
+
+## Include all our classes :
+import os
+for entry in os.scandir('py_files'):
+    if entry.is_file():
+        string = f'from py_files.{entry.name[:-3]} import *'
+        exec (string)
+
 
 ## Include all the kv files
 from kivy.lang import Builder
@@ -68,7 +77,7 @@ class Map(Widget):
     x = NumericProperty(0)
     y = NumericProperty(0)
     pos = ReferenceListProperty(x, y)
-    last_pos = ListProperty()
+    last_pos = ListProperty([0, 0])
     zoom = NumericProperty(1)
 
     texture = StringProperty("")
@@ -95,13 +104,13 @@ class Map(Widget):
 
     # # Controls
     def on_touch_down(self, touch):
+        # Tracks position of touch down
+        self.last_pos = [touch.x, touch.y]
+
         # Tries to pass the touch to childrens
         for token in self.tokens :
             if token.collide_point(*touch.pos):
                 self.touch_passed_on = True
-
-        # Tracks position of touch down
-        self.last_pos = [touch.x, touch.y]
 
         # Zoom
         if touch.is_mouse_scrolling and self.texture != "":
@@ -143,7 +152,7 @@ class Map(Widget):
 
             for token in self.tokens :
                 token.reposition(self.pos)
-            self.last_pos = touch.pos
+            self.last_pos = [touch.x, touch.y]
 
     def on_touch_up(self, touch):
         self.touch_passed_on = False
@@ -173,6 +182,38 @@ class MainWidget(Widget):
         self.map.load_token("Images/Token_Red_1.png")
         self.add_widget(self.map)
         print("game loaded")
+
+    def animation(self, widget, time, color):
+        def destroy_widget(animate, widget):
+            self.remove_widget(widget)
+
+        animate = Animation(duration=0)
+        for i in range (3):
+            animate += Animation(
+                bg_color = color,
+                sizeWanted = 30,
+                duration = time
+            )
+            animate += Animation(
+                bg_color = (0, 0, 1, 1),
+                sizeWanted = 15,
+                duration = 1 - time
+            )
+        animate.repeat = False
+        animate.start(widget)
+        animate.bind(on_complete=destroy_widget)
+
+    def on_touch_down(self, touch):
+        # Ping on double click
+        if touch.is_double_tap:
+            ping = Ping()
+            self.add_widget(ping)
+            ping.pos = touch.pos
+            self.animation(ping, 0.7, (1, 0, 0 ,1))
+
+        # Tries to pass the touch to childrens
+        #if self.map.collide_point(*touch.pos):
+        self.map.on_touch_down(touch)
 
     def update(self, dt): #dt as delta time ?
         pass

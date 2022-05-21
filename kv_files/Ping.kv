@@ -6,10 +6,15 @@
     sizeWanted: 15
     bg_color: (1, 1, 0, 1)
 
-    pos: 150, 500
+    pos: self.pos
     canvas:
         Color:
             rgba: self.bg_color
         Line:
             circle: self.pos[0], self.pos[1], self.sizeWanted
             width: 3
+
+
+<PingManager>:
+    pos: root.pos
+

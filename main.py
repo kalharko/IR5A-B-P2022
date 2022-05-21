@@ -74,33 +74,49 @@ class Token(Widget):
 
 
 class Map(Widget):
-    x = NumericProperty(0)
-    y = NumericProperty(0)
-    pos = ReferenceListProperty(x, y)
-    last_pos = ListProperty([0, 0])
-    zoom = NumericProperty(1)
+    
 
     texture = StringProperty("")
-    size = ListProperty([0,0])
     og_size = ListProperty([0,0])
     grid_size = ListProperty([42, 22])
     cell_size = NumericProperty()
+    size = ListProperty([0,0])
 
-    tokens = ListProperty([])
-    touch_passed_on = BooleanProperty(False)
+    
 
     def load_texture(self, path):
         self.texture = path
         im = Image(source=path)
         self.og_size = im.texture_size
-        self.size = im.texture_size
-        self.cell_size = self.size[0]//self.grid_size[0]
+        self.size = self.og_size
+        self.cell_size = im.texture_size[0]//self.grid_size[0]
+
+    
+
+
+    
+
+
+
+class GameSpace(Widget):
+    x = NumericProperty(0)
+    y = NumericProperty(0)
+    pos = ReferenceListProperty(x, y)
+    size = ListProperty([0,0])
+    last_pos = ListProperty([0, 0])
+    zoom = NumericProperty(1)
+
+    tokens = ListProperty([])
+    touch_passed_on = BooleanProperty(False)
+
+    def load_map(self, path) :
+        self.map.load_texture(path)
+        self.size = self.map.og_size
 
     def load_token(self, path):
-        self.tokens.append(Token(grid_pos=[0,0], size=[self.cell_size,self.cell_size], texture=path))
+        self.tokens.append(Token(grid_pos=[0,0], size=[self.map.cell_size,self.map.cell_size], texture=path))
         self.add_widget(self.tokens[-1])
         self.tokens[-1].reposition(self.pos)
-
 
     # # Controls
     def on_touch_down(self, touch):
@@ -112,8 +128,11 @@ class Map(Widget):
             if token.collide_point(*touch.pos):
                 self.touch_passed_on = True
 
+        if touch.is_double_tap :
+            self.pingManager.on_touch_down(touch)
+
         # Zoom
-        if touch.is_mouse_scrolling and self.texture != "":
+        if touch.is_mouse_scrolling and self.map.texture != "":
             direction = 1 if touch.button == 'scrollup' else -1
             factor = 0.1;
             zoom = 1 * direction * factor;
@@ -121,24 +140,23 @@ class Map(Widget):
                 return
 
             # compute the weights for x and y
-            wx = (touch.x-self.x)/(self.og_size[0]*self.zoom);
-            wy = (touch.y-self.y)/(self.og_size[1]*self.zoom);
+            wx = (touch.x-self.x)/(self.map.og_size[0]*self.zoom);
+            wy = (touch.y-self.y)/(self.map.og_size[1]*self.zoom);
 
             # apply the change in x,y and zoom.
-            self.x -= wx*self.og_size[0]*zoom;
-            self.y -= wy*self.og_size[1]*zoom;
+            self.x -= wx*self.map.og_size[0]*zoom;
+            self.y -= wy*self.map.og_size[1]*zoom;
             self.zoom += zoom;
-            self.size[0] = int(self.og_size[0] * self.zoom)
-            self.size[1] = int(self.og_size[1] * self.zoom)
-            self.cell_size = int(self.size[0] / self.grid_size[0])
+            self.size[0] = int(self.map.og_size[0] * self.zoom)
+            self.size[1] = int(self.map.og_size[1] * self.zoom)
+            self.map.size = self.size
+            self.map.cell_size = int(self.size[0] / self.map.grid_size[0])
 
             # moves and scale tokens
             for token in self.tokens :
-                token.size[0] = self.cell_size
-                token.size[1] = self.cell_size
+                token.size[0] = self.map.cell_size
+                token.size[1] = self.map.cell_size
                 token.reposition(self.pos)
-
-
 
 
     def on_touch_move(self, touch):
@@ -146,12 +164,17 @@ class Map(Widget):
             for token in self.tokens :
                 token.on_touch_move(touch)
         else :
-            # Moves canvas following mouse drag
+            # Moves following mouse drag
             self.x += touch.x-self.last_pos[0]
             self.y += touch.y-self.last_pos[1]
 
             for token in self.tokens :
                 token.reposition(self.pos)
+
+            for ping in self.pingManager.children:
+                ping.x += touch.x-self.last_pos[0]
+                ping.y += touch.y-self.last_pos[1]
+
             self.last_pos = [touch.x, touch.y]
 
     def on_touch_up(self, touch):
@@ -163,9 +186,8 @@ class Map(Widget):
 
 
 
-
 class MainWidget(Widget):
-    role = NumericProperty(0)
+    role = StringProperty(0)
     map = ObjectProperty(None)
 
     def server_setup(self):
@@ -178,42 +200,10 @@ class MainWidget(Widget):
 
     def load_game(self, name):
         # map initialization
-        self.map.load_texture("Images/map_42x22.png")
-        self.map.load_token("Images/Token_Red_1.png")
-        self.add_widget(self.map)
+        self.gameSpace.load_map("Images/map_42x22.png")
+        self.gameSpace.load_token("Images/Token_Red_1.png")
+        #self.add_widget(self.gameSpace) #necessary ?
         print("game loaded")
-
-    def animation(self, widget, time, color):
-        def destroy_widget(animate, widget):
-            self.remove_widget(widget)
-
-        animate = Animation(duration=0)
-        for i in range (3):
-            animate += Animation(
-                bg_color = color,
-                sizeWanted = 30,
-                duration = time
-            )
-            animate += Animation(
-                bg_color = (0, 0, 1, 1),
-                sizeWanted = 15,
-                duration = 1 - time
-            )
-        animate.repeat = False
-        animate.start(widget)
-        animate.bind(on_complete=destroy_widget)
-
-    def on_touch_down(self, touch):
-        # Ping on double click
-        if touch.is_double_tap:
-            ping = Ping()
-            self.add_widget(ping)
-            ping.pos = touch.pos
-            self.animation(ping, 0.7, (1, 0, 0 ,1))
-
-        # Tries to pass the touch to childrens
-        #if self.map.collide_point(*touch.pos):
-        self.map.on_touch_down(touch)
 
     def update(self, dt): #dt as delta time ?
         pass

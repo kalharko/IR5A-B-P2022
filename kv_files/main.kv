@@ -13,21 +13,39 @@
 
 
 <Map>:
+    
     canvas:
         Rectangle:
-            pos: self.pos
-            size: self.size
+            pos: root.pos
+            size: root.size
             source: self.texture
 
+    
 
 
-<MainWidget>:
+<GameSpace>:
     map: map
+    pingManager: pingManager
 
     Map:
         id: map
         center: root.center
         #size: root.size
+
+    PingManager :
+        id : pingManager
+
+
+
+<MainWidget>:
+    
+    gameSpace: gameSpace
+
+    GameSpace:
+        id: gameSpace
+
+
+    
 
 
 

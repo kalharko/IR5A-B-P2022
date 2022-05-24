@@ -4,6 +4,7 @@ from kivy.properties import (
 )
 
 from kivy.animation import Animation
+from kivy.uix.image import Image
 
 class Token(Widget):
     x = NumericProperty(0)
@@ -34,4 +35,30 @@ class Token(Widget):
 
 
 class TokenManager(Widget):
-    pass #TO DO
+    tokens = ListProperty([])
+
+    def load_token(self, path, cell_size):
+        self.tokens.append(Token(grid_pos=[0,0], size=[cell_size,cell_size], texture=path))
+        self.add_widget(self.tokens[-1])
+        self.tokens[-1].reposition(self.pos)
+
+    def move_scale(self, cell_size, position) :
+        for token in self.tokens :
+            token.size[0] = cell_size[0]
+            token.size[1] = cell_size[1]
+            token.reposition(position)
+
+    def test_collision(self, position) :
+        for token in self.tokens :
+            if token.collide_point(*position):
+                return token
+        return False
+
+    def touch_move_pass_on(self, touch) :
+        for token in self.tokens :
+            token.on_touch_move(touch)
+
+    def reposition_all(self, position) :
+        for token in self.tokens :
+            token.reposition(position)
+

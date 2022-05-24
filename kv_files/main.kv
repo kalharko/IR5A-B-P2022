@@ -2,30 +2,13 @@
 
 
 
-<Token>:
-    canvas:
-        Rectangle:
-            source: self.texture
-            pos: self.pos
-            size: self.size
 
-
-
-
-<Map>:
-    
-    canvas:
-        Rectangle:
-            pos: root.pos
-            size: root.size
-            source: self.texture
-
-    
 
 
 <GameSpace>:
     map: map
     pingManager: pingManager
+    tokenManager: tokenManager
 
     Map:
         id: map
@@ -33,19 +16,22 @@
         #size: root.size
 
     PingManager :
-        id : pingManager
+        id: pingManager
+
+    TokenManager :
+        id: tokenManager
 
 
 
 <MainWidget>:
-    
+
     gameSpace: gameSpace
 
     GameSpace:
         id: gameSpace
 
 
-    
+
 
 
 

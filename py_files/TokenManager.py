@@ -15,6 +15,8 @@ class Token(Widget):
     texture = StringProperty("")
     size = ListProperty([0,0])
 
+    name = StringProperty(0)
+
 
     def reposition(self, grid_origin=None):
         if grid_origin != None :

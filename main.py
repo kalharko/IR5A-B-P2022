@@ -19,6 +19,9 @@ from threading import Thread, Lock
 
 from os import path
 
+import queue
+
+from py_files.ClientConnection import ClientConnection
 
 
 require('2.1.0')
@@ -48,20 +51,16 @@ for kv in listdir(kv_path):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 class MainWidget(Widget):
     role = StringProperty(0)
+    game_path = StringProperty(0)
     map = ObjectProperty(None)
+
+    def loadFirstMenuPopup(self):
+        popup = FirstMenuPopup()
+        popup.root = self
+        popup.open()
+        popup.bind(on_dismiss=self.init_game)
 
     def server_setup(self):
         # server
@@ -71,7 +70,13 @@ class MainWidget(Widget):
         t = Thread(target=server.run)
         t.start()
 
-    def load_game(self, name):
+    def init_game(self, name):
+        self.queue = queue.Queue()
+        if self.role == 'server' :
+            self.server = GMServer(self.queue)
+        elif self.role == 'client':
+            self.server = ClientConnection(self.queue)
+
         # map initialization
         self.gameSpace.load_map("Images/map_42x22.png")
         self.gameSpace.load_token("Images/Token_Red_1.png")
@@ -83,36 +88,15 @@ class MainWidget(Widget):
 
 
 
-class FirstMenuPopup(Popup):
-    path = StringProperty(path.abspath('.'))
-    def launch_as_Player(self):
-        self.dismiss()
-
-    def launch_as_GM(self):
-        self.dismiss()
-
-    def open_file_chooser(self):
-        file_chooser = FileChooserPopup()
-        file_chooser.open()
-        file_chooser.bind(on_dismiss=self.popup_set_path)
-
-        file_chooser.file_chooser.path = path.abspath('.')
-
-    def popup_set_path(self, popup):
-        self.path = popup.file_chooser.path
-
-
 
 
 class VttApp(App):
     def build(self):
         self.mainWidget = MainWidget()
-        self.mainWidget.map = Map()
-        popup = FirstMenuPopup()
-        popup.open()
-        popup.bind(on_dismiss=self.mainWidget.load_game)
+        self.mainWidget.loadFirstMenuPopup()
 
         Clock.schedule_interval(self.mainWidget.update, 1.0 / 60.0)
+
         return self.mainWidget
 
 

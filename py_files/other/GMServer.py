@@ -69,7 +69,7 @@ class GMServer():
                         print (message_to_send)
 
                         # Calls broadcast function to send message to all
-                        broadcast(message_to_send, connection)
+                        self.broadcast(message_to_send, connection)
 
                     else:
                         """message may have no content if the connection
@@ -96,8 +96,8 @@ class GMServer():
         with open('Data/log.txt', 'a') as file :
             file.write(data+'\n')
 
-    def broadcast(message, source=None):
-        for client  in self.list_of_clients:
+    def broadcast(self, message, source=None):
+        for client in self.list_of_clients:
             if client != source:
                 try:
                     client.send(bytes(message, 'utf-8'))

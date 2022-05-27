@@ -17,34 +17,35 @@ from kivy import require
 from threading import Thread, Lock
 #import client
 
-from os import path
 
 import queue
-
-from py_files.ClientConnection import ClientConnection
 
 
 require('2.1.0')
 
-## Include our own classes :
-import sys
-#sys.path.append('./py_files')
-#from FileChooserPopup import FileChooserPopup
-
-## Include all our classes :
+# Include all our classes :
 import os
-for entry in os.scandir('py_files'):
-    if entry.is_file():
-        string = f'from py_files.{entry.name[:-3]} import *'
+for depth1 in os.scandir('py_files'):
+    if depth1.is_file():
+        string = f'from py_files.{depth1.name[:-3]} import *'
         exec (string)
+    elif depth1.name != '__pycache__' :
+        for depth2 in os.scandir(depth1):
+            if depth2.is_file():
+                string = f'from py_files.{depth1.name}.{depth2.name[:-3]} import *'
+                exec (string)
 
 
 ## Include all the kv files
 from kivy.lang import Builder
-from os import listdir
-kv_path = "./kv_files/"
-for kv in listdir(kv_path):
-    Builder.load_file(kv_path+kv)
+kv_path = "kv_files"
+for depth1 in os.scandir(kv_path):
+    if depth1.is_file():
+        Builder.load_file(os.path.join(kv_path, depth1.name))
+    else:
+        for depth2 in os.scandir(depth1):
+            if depth2.is_file():
+                Builder.load_file(os.path.join(kv_path, depth1.name, depth2.name))
 
 
 
@@ -61,14 +62,6 @@ class MainWidget(Widget):
         popup.root = self
         popup.open()
         popup.bind(on_dismiss=self.init_game)
-
-    def server_setup(self):
-        # server
-        server_lock = Lock()
-        server = VttServer('Data/game', server_lock)
-        #mainWidget.server_lock = server_lock
-        t = Thread(target=server.run)
-        t.start()
 
     def init_game(self, name):
         self.queue = queue.Queue()
@@ -102,5 +95,6 @@ class VttApp(App):
 
 if __name__ == '__main__':
     VttApp().run()
+    pass
 
 

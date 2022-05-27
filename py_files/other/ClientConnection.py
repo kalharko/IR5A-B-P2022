@@ -1,6 +1,6 @@
 # echo-client.py
 
-import socket, time, _thread, sys
+import socket, time, _thread, sys, select
 
 
 

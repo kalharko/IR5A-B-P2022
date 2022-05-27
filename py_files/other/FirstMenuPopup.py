@@ -3,7 +3,7 @@ from kivy.properties import (
     StringProperty
 )
 from os import path
-from py_files.FileChooserPopup import FileChooserPopup
+from py_files.other.FileChooserPopup import FileChooserPopup
 
 class FirstMenuPopup(Popup):
     path = StringProperty(path.abspath('.'))

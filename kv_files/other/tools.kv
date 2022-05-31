@@ -16,3 +16,14 @@
 <VSeparator@Separator>:
     size_hint_x: None
     width: dp(2)
+
+
+# Define your background color Template
+<BackgroundColor@Widget>
+    background_color: 1, 1, 1, 1
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos

@@ -16,6 +16,16 @@
         pos: root.pos
         size: root.size
 
-        Label:
+        MessageManager:
+            size_hint: [1, 0.9]
+
+        TextInput:
             id:chat_input
-            size_hint: [1, 1]
+            text: 'server ip :'
+            text_size: self.size
+            halign: 'left'
+            valign: 'top'
+            size_hint: [1, 0.1]
+
+
+

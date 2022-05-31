@@ -1,0 +1,21 @@
+#:kivy 2.1.0
+
+<Chat>:
+    chat_input: chat_input
+
+    canvas:
+        Color:
+            rgba: (0.4, 0.4, 0.4,1)
+
+        Rectangle:
+            pos: root.pos
+            size: root.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        pos: root.pos
+        size: root.size
+
+        Label:
+            id:chat_input
+            size_hint: [1, 1]

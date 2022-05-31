@@ -1,0 +1,34 @@
+#:kivy 2.1.0
+
+
+<RightPanel>:
+    chat: chat
+    diceResult: diceResult
+
+    canvas:
+        Color:
+            rgba: (0.3, 0.3, 0.3,1)
+
+        Rectangle:
+            pos: root.pos
+            size: root.size
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.size
+        pos: root.pos
+
+        DiceResult:
+            id: diceResult
+            size_hint: [1, 0.3]
+
+        Chat:
+            id: chat
+            size_hint: [1, 0.7]
+
+
+
+
+
+
+

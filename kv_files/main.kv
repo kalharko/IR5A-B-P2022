@@ -3,32 +3,25 @@
 
 
 
-
-
-<GameSpace>:
-    map: map
-    pingManager: pingManager
-    tokenManager: tokenManager
-
-    Map:
-        id: map
-        center: root.center
-        #size: root.size
-
-    PingManager :
-        id: pingManager
-
-    TokenManager :
-        id: tokenManager
-
-
-
 <MainWidget>:
 
     gameSpace: gameSpace
+    rightPanel: rightPanel
 
-    GameSpace:
-        id: gameSpace
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: 0
+        size: root.size
+
+        GameSpace:
+            id: gameSpace
+            size_hint: [0.7, 1]
+
+
+        RightPanel:
+            id: rightPanel
+            size_hint: [0.3, 1]
+
 
 
 

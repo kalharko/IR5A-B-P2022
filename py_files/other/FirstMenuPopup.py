@@ -6,13 +6,15 @@ from os import path
 from py_files.other.FileChooserPopup import FileChooserPopup
 
 class FirstMenuPopup(Popup):
-    path = StringProperty(path.abspath('.'))
+    path = StringProperty(path.join(path.abspath('.'), 'DefaultGame'))
     def launch_as_Player(self):
         self.root.role = 'client'
+        self.root.game_path = self.path
         self.dismiss()
 
     def launch_as_GM(self):
         self.root.role = 'server'
+        self.root.game_path = self.path
         self.dismiss()
 
     def open_file_chooser(self):

@@ -71,9 +71,8 @@ class MainWidget(Widget):
             self.server = ClientConnection(self.queue)
 
         # map initialization
-        self.gameSpace.load_map("Images/map_42x22.png")
-        self.gameSpace.load_token("Images/Token_Red_1.png")
-        #self.add_widget(self.gameSpace) #necessary ?
+        self.gameSpace.load_map(os.path.join(self.game_path, "Maps", "map_42x22.png"))
+        self.gameSpace.load_token(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
         print("game loaded")
 
     def update(self, dt): #dt as delta time ?

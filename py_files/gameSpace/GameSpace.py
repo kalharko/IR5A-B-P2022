@@ -35,10 +35,7 @@ class GameSpace(Widget):
         if self.tokenManager.test_collision(touch.pos) != False :
             self.touch_passed_on = True
 
-        # for token in self.tokens :
-        #     if token.collide_point(*touch.pos):
-        #         self.touch_passed_on = True
-
+        # Ping
         if touch.is_double_tap :
             self.pingManager.on_touch_down(touch)
 

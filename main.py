@@ -85,6 +85,8 @@ class MainWidget(Widget):
 
         self.overlay.load_bubble(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
         self.overlay.load_bubble(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
+
+        self.rightPanel.load_chats(self.game_path)
         print("game loaded")
 
     def update(self, dt): #dt as delta time ?

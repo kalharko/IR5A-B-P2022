@@ -4,9 +4,9 @@ from kivy.properties import (
     BooleanProperty
 )
 #import hell to be dealt with later
-from py_files.gameSpace.TokenManager import *
-from py_files.gameSpace.PingManager import *
-from py_files.gameSpace.Map import *
+# from py_files.gameSpace.TokenManager import *
+# from py_files.gameSpace.PingManager import *
+# from py_files.gameSpace.Map import *
 
 class Overlay(Widget):
     def load_bubble(self, path):

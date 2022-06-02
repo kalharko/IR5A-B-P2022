@@ -28,12 +28,18 @@ import os
 for depth1 in os.scandir('py_files'):
     if depth1.is_file():
         string = f'from py_files.{depth1.name[:-3]} import *'
-        exec (string)
+        try :
+            exec (string)
+        except:
+            print('Import Error :', string)
     elif depth1.name != '__pycache__' :
         for depth2 in os.scandir(depth1):
             if depth2.is_file():
                 string = f'from py_files.{depth1.name}.{depth2.name[:-3]} import *'
-                exec (string)
+                try :
+                    exec (string)
+                except:
+                    print('Import Error :', string)
 
 
 ## Include all the kv files
@@ -74,8 +80,8 @@ class MainWidget(Widget):
         self.gameSpace.load_map(os.path.join(self.game_path, "Maps", "map_42x22.png"))
         self.gameSpace.load_token(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
 
-        self.overlay.load_bubble("Images/Token_Red_1.png")
-        self.overlay.load_bubble("Images/Token_Red_1.png")
+        self.overlay.load_bubble(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
+        self.overlay.load_bubble(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
         print("game loaded")
 
     def update(self, dt): #dt as delta time ?

@@ -18,4 +18,4 @@ class BubbleManager(Widget):
 
     def load_bubble(self, path, cell_size):
         self.bubbles.append(Bubble(texture= path, size= [cell_size, cell_size], pos= [cell_size*len(self.bubbles), 0]))
-        self.add_widget(self.bubbles[len(self.bubbles) - 1])
+        self.add_widget(self.bubbles[-1])

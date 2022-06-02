@@ -35,26 +35,30 @@ class GameSpace(Widget):
         if self.tokenManager.test_collision(touch.pos) != False :
             self.touch_passed_on = True
 
+        # ContextualMenu
+        if touch.button == "right":
+            self.contextualMenuManager.on_touch_down(touch)
+
         # Ping
-        if touch.is_double_tap :
+        if touch.is_double_tap:
             self.pingManager.on_touch_down(touch)
 
         # Zoom
         if touch.is_mouse_scrolling and self.map.texture != "":
             direction = 1 if touch.button == 'scrollup' else -1
-            factor = 0.1;
-            zoom = 1 * direction * factor;
+            factor = 0.1
+            zoom = 1 * direction * factor
             if self.zoom + zoom < 0.1 :
                 return
 
             # compute the weights for x and y
-            wx = (touch.x-self.x)/(self.map.og_size[0]*self.zoom);
-            wy = (touch.y-self.y)/(self.map.og_size[1]*self.zoom);
+            wx = (touch.x-self.x)/(self.map.og_size[0]*self.zoom)
+            wy = (touch.y-self.y)/(self.map.og_size[1]*self.zoom)
 
             # apply the change in x,y and zoom.
-            self.x -= wx*self.map.og_size[0]*zoom;
-            self.y -= wy*self.map.og_size[1]*zoom;
-            self.zoom += zoom;
+            self.x -= wx*self.map.og_size[0]*zoom
+            self.y -= wy*self.map.og_size[1]*zoom
+            self.zoom += zoom
             self.size[0] = int(self.map.og_size[0] * self.zoom)
             self.size[1] = int(self.map.og_size[1] * self.zoom)
             self.map.size = self.size
@@ -69,11 +73,11 @@ class GameSpace(Widget):
 
 
     def on_touch_move(self, touch):
-        if self.touch_passed_on :
+        if self.touch_passed_on:
             self.tokenManager.touch_move_pass_on(touch)
             # for token in self.tokens :
             #     token.on_touch_move(touch)
-        else :
+        else:
             # Moves following mouse drag
             self.x += touch.x-self.last_pos[0]
             self.y += touch.y-self.last_pos[1]

@@ -10,6 +10,7 @@
 
 <MessageManager>:
     gridlayout: gridlayout
+    on_file_path: self.load_messages()
 
     canvas:
         Color:
@@ -24,6 +25,7 @@
         do_scroll_y: True
         pos: root.pos
         size: root.size
+        size_hint_y: None
 
         GridLayout:
             id: gridlayout
@@ -32,7 +34,4 @@
             pos: root.pos
             #size: root.size
             size_hint_y: None
-
-            Button:
-                on_press: root.load_from_file()
 

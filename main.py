@@ -63,6 +63,8 @@ class MainWidget(Widget):
     game_path = StringProperty(0)
     map = ObjectProperty(None)
 
+    username = StringProperty()
+
     def loadFirstMenuPopup(self):
         popup = FirstMenuPopup()
         popup.root = self
@@ -70,11 +72,12 @@ class MainWidget(Widget):
         popup.bind(on_dismiss=self.init_game)
 
     def init_game(self, name):
-        self.queue = queue.Queue()
+        self.queue_server = queue.Queue()
+        self.queue_game = queue.Queue()
         if self.role == 'server' :
-            self.server = GMServer(self.queue)
+            self.server = GMServer(self.queue_server, self.queue_game)
         elif self.role == 'client':
-            self.server = ClientConnection(self.queue)
+            self.server = ClientConnection(self.queue_server, self.queue_game)
 
         # map initialization
         self.gameSpace.load_map(os.path.join(self.game_path, "Maps", "map_42x22.png"))
@@ -85,7 +88,22 @@ class MainWidget(Widget):
         print("game loaded")
 
     def update(self, dt): #dt as delta time ?
-        pass
+        while not self.queue_game.empty() :
+            work = self.queue_game.get()
+            print(f'working on {work}')
+            self.queue_game.task_done()
+
+    def on_stop(self) : #not a kivy function
+        print('MainWidget on_stop')
+        if self.role == 'client' :
+            self.queue_server.put(f'msg:{self.username} disconected')
+            self.queue_server.join()
+        elif self.role == 'server' :
+            self.queue_server.put('msg:Server shutdown')
+            #self.queue_server.put('quit')
+            #self.queue_server.join()
+
+
 
 
 
@@ -95,10 +113,18 @@ class VttApp(App):
     def build(self):
         self.mainWidget = MainWidget()
         self.mainWidget.loadFirstMenuPopup()
+        self.mainWidget.queue_game = queue.Queue()
 
         Clock.schedule_interval(self.mainWidget.update, 1.0 / 60.0)
 
         return self.mainWidget
+
+    def on_start(self):
+        pass
+
+    def on_stop(self):
+        print('VttApp on_stop')
+        self.mainWidget.on_stop()
 
 
 if __name__ == '__main__':

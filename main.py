@@ -73,6 +73,9 @@ class MainWidget(Widget):
         # map initialization
         self.gameSpace.load_map(os.path.join(self.game_path, "Maps", "map_42x22.png"))
         self.gameSpace.load_token(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
+
+        self.overlay.load_bubble("Images/Token_Red_1.png")
+        self.overlay.load_bubble("Images/Token_Red_1.png")
         print("game loaded")
 
     def update(self, dt): #dt as delta time ?

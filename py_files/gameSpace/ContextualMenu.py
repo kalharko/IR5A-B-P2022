@@ -2,16 +2,15 @@ from kivy.uix.widget import Widget
 from kivy.properties import (
     NumericProperty, ColorProperty, ReferenceListProperty
 )
+from kivy.clock import Clock
 
 
 class ContextualMenu(Widget):
+    x = NumericProperty(0)
+    y = NumericProperty(0)
+    pos = ReferenceListProperty(x, y)
 
-    def __init__(self, ):
-        Widget.__init__(self)
 
-        x = NumericProperty(0)
-        y = NumericProperty(0)
-        self.pos = ReferenceListProperty(x, y)
 
     def start_vote(self):
         """
@@ -31,11 +30,10 @@ class ContextualMenu(Widget):
 class ContextualMenuManager(Widget):
     bg_color = ColorProperty()
     sizeWanted = NumericProperty()
-    is_displayed = False
 
     def on_touch_down(self, touch):
-        """Game related contextual menu instanciation, called when player right clicks on the map"""
+        """Game related contextual menu instantiation, called when player right-clicks on the map"""
         menu = ContextualMenu()
-        is_displayed = True
-        self.add_widget(menu)
         menu.pos = touch.pos
+        self.add_widget(menu)
+

@@ -9,16 +9,17 @@
     pos: self.pos
     BoxLayout:
         orientation: 'vertical'
+        pos: self.pos
         Button:
             text: 'create vote'
-            size_hint: [0.5, 10]
+            size_hint: [1, 10]
             on_release: root.start_vote()
-
 
         Button:
             text: 'change map'
-            size_hint: [0.5, 0.1]
+            size_hint: [1, 10]
             on_release: root.change_map()
+
 
 <ContextualMenuManager>:
     pos: root.pos

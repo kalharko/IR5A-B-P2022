@@ -12,17 +12,17 @@ class Message(Widget) :
 
 
 class MessageManager(Widget) :
-
+    file_path = StringProperty()
 
     def add_message(self, author, content) :
         self.gridlayout.add_widget(Message(content=content, author=author))
 
 
-    def load_from_file(self, path='DefaultGame\Chats\general_chat.txt') :
+    def load_messages(self) :
         """ chat file content :
         msg_author : msg_content
         """
-        with open(path, 'r') as file :
+        with open(self.file_path, 'r') as file :
             for line in file.readlines() :
                 author = line.split(' : ')[0]
                 content = line[len(author)+3:]

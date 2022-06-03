@@ -6,8 +6,11 @@ import _thread
 
 
 class GMServer():
-    def __init__(self, queue) :
-        self.queue = queue
+    def __init__(self, queue_server, queue_game) :
+        self.queue_server = queue_server
+        self.queue_game = queue_game
+        self.queue_to_clients = []
+        self.queue_from_clients = []
         self.threads = []
         self.list_of_clients = []
         self.threads.append(_thread.start_new_thread(self.run, ()))
@@ -30,7 +33,8 @@ class GMServer():
         print('Server is listening..')
         server.listen(100)
 
-        while True:
+        self.running = True
+        while self.running:
             """Accepts a connection request and stores two parameters,
             conn which is a socket object for that user, and addr
             which contains the IP address of the client that just
@@ -48,9 +52,25 @@ class GMServer():
             # that connects
             self.threads.append(_thread.start_new_thread(self.clientThread,(conn,addr)))
 
-        self.threads.remove(_thread.get_ident())
-        conn.close()
-        server.close()
+            # Accepts tasks from queues
+            while not self.queue_server.empty() :
+                print('queue_server.get()')
+                work = self.queue_server.get()
+                print(f'server working on : {work}')
+
+                if work == 'quit' :
+                    for q in self.queue_to_clients :
+                        q.put('quit')
+                        q.join()
+
+                    conn.close()
+                    server.close()
+                    self.running = False
+                    print('running = Fasle')
+
+                self.queue_server.task_done()
+
+
 
 
     def clientThread(self, connection, addr):

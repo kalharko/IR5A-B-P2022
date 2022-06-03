@@ -2,6 +2,7 @@
 
 <Chat>:
     chat_input: chat_input
+    messageManager: messageManager
 
     canvas:
         Color:
@@ -17,15 +18,14 @@
         size: root.size
 
         MessageManager:
+            id: messageManager
             size_hint: [1, 0.9]
 
         TextInput:
             id:chat_input
-            text: 'server ip :'
+            text: ''
             text_size: self.size
             halign: 'left'
             valign: 'top'
             size_hint: [1, 0.1]
-
-
-
+            size_hint_min_y: 30

@@ -3,13 +3,12 @@
 
 
 
-
-
-
 <MainWidget>:
 
     gameSpace: gameSpace
     rightPanel: rightPanel
+    overlay: overlay
+
 
     BoxLayout:
         orientation: 'horizontal'
@@ -26,15 +25,5 @@
             size_hint: [0.3, 1]
             size_hint_max_x: 325
 
-
-
-
-
-
-
-
-
-
-
-
-
+    Overlay:
+        id: overlay

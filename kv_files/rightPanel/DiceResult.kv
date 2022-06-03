@@ -2,4 +2,31 @@
 
 
 <DiceResult>:
+    dice_input: dice_input
+    messageManager: messageManager
 
+    canvas:
+        Color:
+            rgba: (0.6, 0.4, 0.6, 1)
+
+        Rectangle:
+            pos: root.pos
+            size: root.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        pos: root.pos
+        size: root.size
+
+        MessageManager:
+            id: messageManager
+            size_hint: [1, 0.9]
+
+        TextInput:
+            id:dice_input
+            text: ''
+            text_size: self.size
+            halign: 'left'
+            valign: 'top'
+            size_hint: [1, 0.1]
+            size_hint_min_y: 30

@@ -5,8 +5,9 @@ import socket, time, _thread, sys, select
 
 
 class ClientConnection() :
-    def __init__(self, queue):
-        self.queue = queue
+    def __init__(self, queue_server, queue_game):
+        self.queue_server = queue_server
+        self.queue_game = queue_game
         self.thread = _thread.start_new_thread(self.run, ())
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

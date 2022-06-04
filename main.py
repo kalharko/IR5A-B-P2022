@@ -59,11 +59,8 @@ for depth1 in os.scandir(kv_path):
 
 
 class MainWidget(Widget):
-    role = StringProperty(0)
-    game_path = StringProperty(0)
+    gameData = ObjectProperty(GameData())
     map = ObjectProperty(None)
-
-    username = StringProperty()
 
     def loadFirstMenuPopup(self):
         popup = FirstMenuPopup()
@@ -74,19 +71,25 @@ class MainWidget(Widget):
     def init_game(self, name):
         self.queue_server = queue.Queue()
         self.queue_game = queue.Queue()
-        if self.role == 'server' :
+        if self.gameData.role == 'server' :
             self.server = GMServer(self.queue_server, self.queue_game)
-        elif self.role == 'client':
+        elif self.gameData.role == 'client':
             self.server = ClientConnection(self.queue_server, self.queue_game)
 
-        # map initialization
-        self.gameSpace.load_map(os.path.join(self.game_path, "Maps", "map_42x22.png"))
-        self.gameSpace.load_token(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
+        # GameSpace initialization
+        self.gameSpace.load_map(os.path.join(self.gameData.maps_dir, "map_42x22.png"))
+        self.gameSpace.load_token(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
+        self.gameSpace.gameData = self.gameData
 
-        self.overlay.load_bubble(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
-        self.overlay.load_bubble(os.path.join(self.game_path, "Tokens", "Token_Red_1.png"))
+        # Overlay initialization
+        self.overlay.load_bubble(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
+        self.overlay.load_bubble(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
+        self.overlay.gameData = self.gameData
 
-        self.rightPanel.load_chats(self.game_path)
+        # RightPanel initialization
+        self.rightPanel.gameData = self.gameData
+        self.rightPanel.load_chats(self.gameData.game_dir)
+
         print("game loaded")
 
     def update(self, dt): #dt as delta time ?
@@ -97,10 +100,10 @@ class MainWidget(Widget):
 
     def on_stop(self) : #not a kivy function
         print('MainWidget on_stop')
-        if self.role == 'client' :
+        if self.gameData.role == 'client' :
             self.queue_server.put(f'msg:{self.username} disconected')
             self.queue_server.join()
-        elif self.role == 'server' :
+        elif self.gameData.role == 'server' :
             self.queue_server.put('msg:Server shutdown')
             #self.queue_server.put('quit')
             #self.queue_server.join()

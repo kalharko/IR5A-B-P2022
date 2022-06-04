@@ -1,13 +1,12 @@
 from kivy.uix.widget import Widget
-from kivy.properties import (StringProperty)
+from kivy.properties import (StringProperty, ObjectProperty)
 
 import os
 
 
 class DiceResult(Widget) :
-    path = StringProperty(os.path.join('Chats', 'dice_results.txt'))
+    gameData = ObjectProperty(None)
 
 
-    def load_messages(self, gamepath) :
-        self.messageManager.file_path = os.path.join(gamepath, self.path)
-        self.messageManager.load_messages()
+    def load_messages(self) :
+        self.messageManager.load_messages(os.path.join(self.gameData.chat_dir, 'dice_results.txt'))

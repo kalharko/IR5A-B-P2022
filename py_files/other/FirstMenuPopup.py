@@ -8,13 +8,15 @@ from py_files.other.FileChooserPopup import FileChooserPopup
 class FirstMenuPopup(Popup):
     path = StringProperty(path.join(path.abspath('.'), 'DefaultGame'))
     def launch_as_Player(self):
-        self.root.role = 'client'
-        self.root.game_path = self.path
+        self.root.gameData.role = 'client'
+        self.root.gameData.set_game_dir(self.path)
+        self.root.gameData.username = 'kalharko'
         self.dismiss()
 
     def launch_as_GM(self):
-        self.root.role = 'server'
-        self.root.game_path = self.path
+        self.root.gameData.role = 'server'
+        self.root.gameData.set_game_dir(self.path)
+        self.root.gameData.username = 'kalharko'
         self.dismiss()
 
     def open_file_chooser(self):

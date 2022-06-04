@@ -36,10 +36,9 @@ class PingManager(Widget):
         animate.start(widget)
         animate.bind(on_complete=destroy_widget)
 
-
     def on_touch_down(self, touch):
         # Ping instantiation
-        # called when double click on widget map
+        # called when double-click on widget map
         ping = Ping()
         self.add_widget(ping)
         ping.pos = touch.pos

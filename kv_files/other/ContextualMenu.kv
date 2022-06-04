@@ -1,0 +1,26 @@
+#:kivy 2.1.0
+
+
+<ContextualMenu>:
+    auto_dismiss: False
+    sizeWanted: 50
+    bg_color: (1, 1, 0, 1)
+
+    pos: self.pos
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.pos
+        Button:
+            text: 'create vote'
+            size_hint: [1, 10]
+            on_release: root.start_vote()
+
+        Button:
+            text: 'change map'
+            size_hint: [1, 10]
+            on_release: root.change_map()
+
+
+<ContextualMenuManager>:
+    pos: root.pos
+

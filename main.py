@@ -19,7 +19,9 @@ from threading import Thread, Lock
 
 
 import queue
-
+from py_files.other.FileChooserPopup import FileChooserPopup
+from py_files.other.FirstMenuPopup import FirstMenuPopup
+from py_files.other.GMServer import GMServer
 
 require('2.1.0')
 

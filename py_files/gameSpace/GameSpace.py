@@ -31,15 +31,9 @@ class GameSpace(Widget):
         # Tracks position of touch down
         self.last_pos = [touch.x, touch.y]
 
-        self.contextualMenuManager.clear_widgets()
-
         # Tries to pass the touch to tokens
         if self.tokenManager.test_collision(touch.pos) != False :
             self.touch_passed_on = True
-
-        # ContextualMenu
-        if touch.button == "right":
-            self.contextualMenuManager.on_touch_down(touch)
 
         # Ping
         if touch.is_double_tap:

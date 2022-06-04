@@ -5,11 +5,15 @@
     auto_dismiss: False
     sizeWanted: 50
     bg_color: (1, 1, 0, 1)
-
     pos: self.pos
+    # on_disabled: self.on_disabled()
+
+    boxLayout: boxLayout
+
     BoxLayout:
+        id: boxLayout
         orientation: 'vertical'
-        pos: self.pos
+        pos: root.pos
         Button:
             text: 'create vote'
             size_hint: [1, 10]
@@ -21,6 +25,6 @@
             on_release: root.change_map()
 
 
-<ContextualMenuManager>:
-    pos: root.pos
+# <ContextualMenuManager>:
+#     pos: root.pos
 

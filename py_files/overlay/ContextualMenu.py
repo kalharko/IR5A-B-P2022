@@ -32,13 +32,3 @@ class ContextualMenu(Widget):
             self.opacity = 1
 
 
-# class ContextualMenuManager(Widget):
-#     bg_color = ColorProperty()
-#     sizeWanted = NumericProperty()
-
-#     def on_touch_down(self, touch):
-#         """Game related contextual menu instantiation, called when player right-clicks on the map"""
-#         menu = ContextualMenu()
-#         menu.pos = touch.pos
-#         self.add_widget(menu)
-

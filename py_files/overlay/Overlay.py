@@ -24,4 +24,3 @@ class Overlay(Widget):
             self.contextualMenu.disabled = True
 
 
-        # self.contextualMenuManager.clear_widgets()

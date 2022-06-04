@@ -71,6 +71,7 @@ class MainWidget(Widget):
         popup.bind(on_dismiss=self.init_game)
 
     def init_game(self, name):
+        # Server initialization
         self.queue_server = queue.Queue()
         self.queue_game = queue.Queue()
         if self.gameData.role == 'server' :
@@ -78,15 +79,19 @@ class MainWidget(Widget):
         elif self.gameData.role == 'client':
             self.server = ClientConnection(self.queue_server, self.queue_game)
 
+        # GameData initialization
+        self.gameData.load()
+
         # GameSpace initialization
-        self.gameSpace.load_map(os.path.join(self.gameData.maps_dir, "map_42x22.png"))
-        self.gameSpace.load_token(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
         self.gameSpace.gameData = self.gameData
+        self.gameSpace.load_map(os.path.join(self.gameData.maps_dir, self.gameData.data['map']))
+        for token_info in self.gameData.tokens :
+            self.gameSpace.load_token(token_info)
 
         # Overlay initialization
-        self.overlay.load_bubble(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
-        self.overlay.load_bubble(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
         self.overlay.gameData = self.gameData
+        self.overlay.load_bubble(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
+        self.overlay.load_bubble(os.path.join(self.gameData.tokens_dir, "Token_Red_1.png"))
 
         # RightPanel initialization
         self.rightPanel.gameData = self.gameData
@@ -110,6 +115,10 @@ class MainWidget(Widget):
             #self.queue_server.put('quit')
             #self.queue_server.join()
 
+        # GameData save
+        self.gameSpace.update_token_info()
+        self.gameData.save()
+        print('mainWidget.gameData.save() Done')
 
 
 

@@ -1,6 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.properties import (
-    NumericProperty, ListProperty, ReferenceListProperty, StringProperty
+    NumericProperty, ListProperty, ReferenceListProperty, StringProperty, DictProperty
 )
 
 from kivy.animation import Animation
@@ -15,7 +15,7 @@ class Token(Widget):
     texture = StringProperty("")
     size = ListProperty([0,0])
 
-    name = StringProperty(0)
+    info = DictProperty(None)
 
 
     def reposition(self, grid_origin=None):
@@ -26,22 +26,27 @@ class Token(Widget):
         self.y = self.grid_origin[1] + self.size[1] * self.grid_pos[1]
 
     def on_touch_move(self, touch):
-        # self.pos = touch.pos
-        # self.x = touch.x - self.size[0] // 2
-        # self.y = touch.y - self.size[1] // 2
-
+        og_grid_pos = self.grid_pos[:]
         self.grid_pos[0] = (touch.x - self.grid_origin[0]) // self.size[0]
         self.grid_pos[1] = (touch.y - self.grid_origin[1]) // self.size[1]
-        self.reposition()
+        if self.grid_pos != og_grid_pos :
+            self.info['position'][0] = int(self.grid_pos[0])
+            self.info['position'][1] = int(self.grid_pos[1])
+            self.reposition()
+            return True
+        else :
+            return False
 
 
 
 class TokenManager(Widget):
     tokens = ListProperty([])
 
-    def load_token(self, path, cell_size):
+    def load_token(self, path, cell_size, token_info):
         self.tokens.append(Token(grid_pos=[0,0], size=[cell_size,cell_size], texture=path))
         self.add_widget(self.tokens[-1])
+        self.tokens[-1].info = token_info
+        self.tokens[-1].grid_pos = token_info['position']
         self.tokens[-1].reposition(self.pos)
 
     def move_scale(self, cell_size, position) :
@@ -58,7 +63,8 @@ class TokenManager(Widget):
 
     def touch_move_pass_on(self, touch) :
         for token in self.tokens :
-            token.on_touch_move(touch)
+            if token.on_touch_move(touch) :
+                return
 
     def reposition_all(self, position) :
         for token in self.tokens :

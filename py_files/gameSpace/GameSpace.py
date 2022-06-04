@@ -1,13 +1,15 @@
 
 from kivy.uix.widget import Widget
 from kivy.properties import (
-    NumericProperty, ListProperty, ReferenceListProperty, StringProperty,
+    NumericProperty, ListProperty, ReferenceListProperty, ObjectProperty,
     BooleanProperty
 )
 #import hell to be dealt with later
 from py_files.gameSpace.TokenManager import *
 from py_files.gameSpace.PingManager import *
 from py_files.gameSpace.Map import *
+
+import os
 
 
 class GameSpace(Widget):
@@ -18,13 +20,25 @@ class GameSpace(Widget):
     last_pos = ListProperty([0, 0])
     zoom = NumericProperty(1)
     touch_passed_on = BooleanProperty(False)
+    gameData = ObjectProperty(None)
 
     def load_map(self, path) :
         self.map.load_texture(path)
         self.size = self.map.og_size
 
-    def load_token(self, path):
-        self.tokenManager.load_token(path, self.map.cell_size)
+    def load_token(self, token_info):
+        if self.gameData == None :
+            return 'GameSpace load_token() error : gameData not set'
+
+        path = os.path.join(self.gameData.tokens_dir, token_info['image'])
+        self.tokenManager.load_token(path, self.map.cell_size, token_info)
+
+    def update_token_info(self) :
+        token_info = []
+        for token in self.tokenManager.tokens :
+            token_info.append(token.info)
+        self.gameData.tokens = token_info
+
 
     # # Controls
     def on_touch_down(self, touch):

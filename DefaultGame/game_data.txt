@@ -1,0 +1,3 @@
+title : DefaultGame
+author : kalharko
+map : map_42x22.png

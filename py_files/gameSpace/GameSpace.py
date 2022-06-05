@@ -21,6 +21,7 @@ class GameSpace(Widget):
     zoom = NumericProperty(1)
     touch_passed_on = BooleanProperty(False)
     gameData = ObjectProperty(None)
+    passed_on_token = ObjectProperty(None)
 
     def load_map(self, path) :
         self.map.load_texture(path)
@@ -46,7 +47,8 @@ class GameSpace(Widget):
         self.last_pos = [touch.x, touch.y]
 
         # Tries to pass the touch to tokens
-        if self.tokenManager.test_collision(touch.pos) == True :
+        self.passed_on_token = self.tokenManager.test_collision(touch.pos)
+        if self.passed_on_token.info != 'dummy' :
             self.touch_passed_on = True
 
         # Ping
@@ -55,7 +57,7 @@ class GameSpace(Widget):
 
         # Zoom
         if touch.is_mouse_scrolling and self.map.texture != "":
-            if self.tokenManager.test_collision(touch.pos) == True and not self.touch_passed_on:
+            if not self.collide_point(*touch.pos) and not self.touch_passed_on:
                 return
 
             direction = 1 if touch.button == 'scrollup' else -1
@@ -83,7 +85,7 @@ class GameSpace(Widget):
 
     def on_touch_move(self, touch):
         if self.touch_passed_on:
-            self.tokenManager.touch_move_pass_on(touch)
+            self.passed_on_token.on_touch_move(touch)
         else:
             # Moves following mouse drag
             self.x += touch.x-self.last_pos[0]

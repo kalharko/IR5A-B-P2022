@@ -96,6 +96,7 @@ class MainWidget(Widget):
         # RightPanel initialization
         self.rightPanel.gameData = self.gameData
         self.rightPanel.load_chats(self.gameData.game_dir)
+        self.rightPanel.size_hint = [0.3, 1]
 
         print("game loaded")
 
@@ -108,8 +109,8 @@ class MainWidget(Widget):
     def on_stop(self) : #not a kivy function
         print('MainWidget on_stop')
         if self.gameData.role == 'client' :
-            self.queue_server.put(f'msg:{self.username} disconected')
-            self.queue_server.join()
+            self.queue_server.put('quit')
+            #self.queue_server.join()
         elif self.gameData.role == 'server' :
             self.queue_server.put('msg:Server shutdown')
             #self.queue_server.put('quit')

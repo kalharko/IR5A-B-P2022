@@ -18,7 +18,8 @@ class ClientConnection() :
         Port = 65432
         self.server.connect((IP_address, Port))
 
-        while True:
+        self.running = True
+        while self.running:
             # maintains a list of possible input streams
             sockets_list = [sys.stdin, self.server]
 
@@ -42,5 +43,18 @@ class ClientConnection() :
                     sys.stdout.write("<You>")
                     sys.stdout.write(message)
                     sys.stdout.flush()
-        server.close()
+
+            # Accepts tasks from queues
+            while not self.queue_server.empty() :
+                print('queue_server.get()')
+                work = self.queue_server.get()
+                print(f'server working on : {work}')
+
+                if work == 'quit' :
+                    self.server.close()
+                    self.running = False
+                    print('running = Fasle')
+
+                self.queue_server.task_done()
+
 

@@ -31,6 +31,8 @@ class GMServer():
         except socket.error as e:
             print(str(e))
         print('Server is listening..')
+        self.queue_game.put('GMServer run()')
+
         server.listen(100)
 
         self.running = True

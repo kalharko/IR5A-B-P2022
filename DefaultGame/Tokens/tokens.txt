@@ -1,8 +1,8 @@
 |
 title : Mily de Sac-Ville
 image : Token_Red_1.png
-position : [3, 5]
+position : [2, 2]
 |
 title : Horric N'Catauh II
 image : Token_Red_1.png
-position : [3, 7]
+position : [5, 7]

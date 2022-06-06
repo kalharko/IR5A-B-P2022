@@ -9,9 +9,10 @@ from kivy.uix.image import Image
 import copy
 
 
-class DummyToken():
-    def __init__(self) :
+class DummyToken:
+    def __init__(self):
         self.info = 'dummy'
+
 
 class Token(Widget):
     x = NumericProperty(0)
@@ -24,9 +25,8 @@ class Token(Widget):
 
     info = DictProperty(None)
 
-
     def reposition(self, grid_origin=None):
-        if grid_origin != None :
+        if grid_origin != None:
             self.grid_origin = grid_origin
 
         self.x = self.grid_origin[0] + self.size[0] * self.grid_pos[0]
@@ -42,40 +42,39 @@ class Token(Widget):
             self.info['position'][1] = int(self.grid_pos[1])
             self.reposition()
             return True
-        else :
+        else:
             return False
-
 
 
 class TokenManager(Widget):
     tokens = ListProperty([])
 
     def load_token(self, path, cell_size, token_info):
-        self.tokens.append(Token(grid_pos=[0,0], size=[cell_size,cell_size], texture=path))
+        self.tokens.append(Token(grid_pos=[0, 0], size=[cell_size, cell_size], texture=path))
         self.add_widget(self.tokens[-1])
         self.tokens[-1].info = token_info
         self.tokens[-1].grid_pos = token_info['position']
         self.tokens[-1].reposition(self.pos)
 
-    def move_scale(self, cell_size, position) :
-        for token in self.tokens :
+    def move_scale(self, cell_size, position):
+        for token in self.tokens:
             token.size[0] = cell_size
             token.size[1] = cell_size
             token.reposition(position)
 
-    def test_collision(self, position) :
-        for token in self.tokens :
+    def test_collision(self, position):
+        for token in self.tokens:
             if token.collide_point(*position):
                 return token
         return DummyToken()
 
-    def touch_move_pass_on(self, touch) :
-        for token in self.tokens :
-            if token.collide_point(*touch.pos) == True :
+    def touch_move_pass_on(self, touch):
+        for token in self.tokens:
+            if token.collide_point(*touch.pos) is True:
                 token.on_touch_move(touch)
                 return
 
-    def reposition_all(self, position) :
-        for token in self.tokens :
+    def reposition_all(self, position):
+        for token in self.tokens:
             token.reposition(position)
 

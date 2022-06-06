@@ -5,8 +5,8 @@ import _thread
 #from time import
 
 
-class GMServer():
-    def __init__(self, queue_server, queue_game) :
+class GMServer:
+    def __init__(self, queue_server, queue_game):
         self.queue_server = queue_server
         self.queue_game = queue_game
         self.queue_to_clients = []
@@ -48,32 +48,29 @@ class GMServer():
             self.list_of_clients.append(conn)
 
             # prints the address of the user that just connected
-            print (addr[0] + " connected")
+            print(addr[0] + " connected")
 
             # creates and individual thread for every user
             # that connects
-            self.threads.append(_thread.start_new_thread(self.clientThread,(conn,addr)))
+            self.threads.append(_thread.start_new_thread(self.clientThread, (conn, addr)))
 
             # Accepts tasks from queues
-            while not self.queue_server.empty() :
+            while not self.queue_server.empty():
                 print('queue_server.get()')
                 work = self.queue_server.get()
                 print(f'server working on : {work}')
 
-                if work == 'quit' :
-                    for q in self.queue_to_clients :
+                if work == 'quit':
+                    for q in self.queue_to_clients:
                         q.put('quit')
                         q.join()
 
                     conn.close()
                     server.close()
                     self.running = False
-                    print('running = Fasle')
+                    print('running = False')
 
                 self.queue_server.task_done()
-
-
-
 
     def clientThread(self, connection, addr):
         # sends a message to the client whose user object is conn
@@ -88,7 +85,7 @@ class GMServer():
                         user who just sent the message on the server
                         terminal"""
                         message_to_send = "<" + str(addr[0]) + "> " + message.decode('utf-8')
-                        print (message_to_send)
+                        print(message_to_send)
 
                         # Calls broadcast function to send message to all
                         self.broadcast(message_to_send, connection)
@@ -128,4 +125,4 @@ class GMServer():
 
                     # if the link is broken, we remove the client
                     print('broadcast - lost client :', client)
-                    self.list_of_clients.remove(client) # will raise bad errors
+                    self.list_of_clients.remove(client)  # will raise bad errors

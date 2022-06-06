@@ -13,14 +13,13 @@ class Overlay(Widget):
     def load_bubble(self, path):
         self.bubbleManager.load_bubble(path, 100)
 
-
     def on_touch_down(self, touch):
         """Game related contextual menu instantiation, called when player right-clicks on the map"""
         # ContextualMenu
         if touch.button == "right":
             self.contextualMenu.disabled = False
             self.contextualMenu.pos = touch.pos
-        else :
-            self.contextualMenu.disabled = True
-
+        else:
+            if self.contextualMenu.test_collision(touch.pos) is None:
+                self.contextualMenu.disabled = True
 

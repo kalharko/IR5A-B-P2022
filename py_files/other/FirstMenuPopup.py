@@ -5,8 +5,10 @@ from kivy.properties import (
 from os import path
 from py_files.other.FileChooserPopup import FileChooserPopup
 
+
 class FirstMenuPopup(Popup):
     path = StringProperty(path.join(path.abspath('.'), 'DefaultGame'))
+
     def launch_as_Player(self):
         self.root.gameData.role = 'client'
         self.root.gameData.set_game_dir(self.path)

@@ -56,10 +56,6 @@ for depth1 in os.scandir(kv_path):
                 Builder.load_file(os.path.join(kv_path, depth1.name, depth2.name))
 
 
-
-
-
-
 class MainWidget(Widget):
     gameData = ObjectProperty(GameData())
     map = ObjectProperty(None)

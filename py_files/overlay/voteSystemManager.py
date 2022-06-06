@@ -5,7 +5,7 @@ from kivy.properties import (
 from kivy.clock import Clock
 
 
-class ContextualMenu(Widget):
+class VoteMenu(Widget):
     x = NumericProperty(0)
     y = NumericProperty(0)
     pos = ReferenceListProperty(x, y)
@@ -30,8 +30,4 @@ class ContextualMenu(Widget):
         else:
             self.opacity = 1
 
-    def test_collision(self, position):
-        if self.collide_point(*position):
-            return self
-        else:
-            return None
+

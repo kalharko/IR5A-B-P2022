@@ -4,7 +4,7 @@ from kivy.properties import (
     NumericProperty, ListProperty, ReferenceListProperty, ObjectProperty,
     BooleanProperty
 )
-#import hell to be dealt with later
+# import hell to be dealt with later
 from py_files.gameSpace.TokenManager import *
 from py_files.gameSpace.PingManager import *
 from py_files.gameSpace.Map import *
@@ -40,7 +40,6 @@ class GameSpace(Widget):
             token_info.append(token.info)
         self.gameData.tokens = token_info
 
-
     # # Controls
     def on_touch_down(self, touch):
         # Tracks position of touch down
@@ -48,7 +47,7 @@ class GameSpace(Widget):
 
         # Tries to pass the touch to tokens
         self.passed_on_token = self.tokenManager.test_collision(touch.pos)
-        if self.passed_on_token.info != 'dummy' :
+        if self.passed_on_token.info != 'dummy':
             self.touch_passed_on = True
 
         # Ping
@@ -63,7 +62,7 @@ class GameSpace(Widget):
             direction = 1 if touch.button == 'scrollup' else -1
             factor = 0.1
             zoom = 1 * direction * factor
-            if self.zoom + zoom < 0.1 :
+            if self.zoom + zoom < 0.1:
                 return
 
             # compute the weights for x and y
@@ -81,7 +80,6 @@ class GameSpace(Widget):
 
             # moves and scale tokens
             self.tokenManager.move_scale(self.map.cell_size, [wx, wy])
-
 
     def on_touch_move(self, touch):
         if self.touch_passed_on:

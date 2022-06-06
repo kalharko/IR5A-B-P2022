@@ -12,9 +12,9 @@ class ClientConnection() :
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def run(self):
-        #IP address
+        # IP address
         IP_address = "127.0.0.1"
-        #port number
+        # port number
         Port = 65432
         self.server.connect((IP_address, Port))
 

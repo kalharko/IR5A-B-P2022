@@ -1,14 +1,13 @@
-# echo-client.py
-
-import socket, time, _thread, sys, select
-
+import socket, sys, select
+from threading import Thread
 
 
 class ClientConnection() :
     def __init__(self, queue_server, queue_game):
         self.queue_server = queue_server
         self.queue_game = queue_game
-        self.thread = _thread.start_new_thread(self.run, ())
+        Thread(target=self.run, daemon=True).start()
+        #self.thread = _thread.start_new_thread(self.run, ())
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def run(self):
@@ -36,7 +35,7 @@ class ClientConnection() :
             for socks in read_sockets:
                 if socks == self.server:
                     message = socks.recv(2048)
-                    print (message.decode('utf-8'))
+                    sys.stdout.write(message.decode('utf-8'))
                 else:
                     message = sys.stdin.readline()
                     self.server.send(bytes(message, 'utf-8'))
@@ -46,14 +45,13 @@ class ClientConnection() :
 
             # Accepts tasks from queues
             while not self.queue_server.empty() :
-                print('queue_server.get()')
+                sys.stdout.write('queue_server.get()')
                 work = self.queue_server.get()
-                print(f'server working on : {work}')
+                sys.stdout.write(f'server working on : {work}')
 
                 if work == 'quit' :
                     self.server.close()
                     self.running = False
-                    print('running = Fasle')
 
                 self.queue_server.task_done()
 

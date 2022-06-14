@@ -1,63 +1,116 @@
 #:kivy 2.1.0
 
 
-
 <FirstMenuPopup>:
     auto_dismiss: False
     title: 'Setup'
     size_hint: [0.7, 0.6]
+    background_color:(44/255,47/255,51/255,1)
 
     BoxLayout:
+        id: motherBox
         orientation: 'vertical'
         spacing: 30
 
-        BoxLayout:
-            orientation: 'horizontal'
-            spacing: 10
+        RelativeLayout:
+            id: topHLayout
 
             Label:
-                text: 'server ip :'
-                text_size: self.size
-                halign: 'right'
-                valign: 'middle'
-                size_hint: [0.1, 0.1]
+                id: servIp
+                text: '   Server ip :'
+                size: self.texture_size
+                text_size: cm(3),cm(2)
+                pos_hint: {'x':-0.38,'y':0.7}
 
             TextInput:
+                id: ipInput
                 multiline: False
-                size_hint: [0.4, 0.1]
+                size_hint: [0.4, 0.4]
+                pos_hint: {'x':0.25,'y':0.4}
 
-        Button:
-            size_hint: [0.4, 0.1]
+            Label:
+                id: pseudoLabel
+                text: '   Pseudo :'
+                size: self.texture_size
+                text_size: cm(3),cm(2)
+                pos_hint: {'x':-0.38,'y':0.1}
+
+            TextInput:
+                id: pseudoInput
+                multiline: False
+                size_hint: [0.4, 0.4]
+                pos_hint: {'x':0.25,'y':-0.2}
+
+        roundedButton:
+            id: launchPlayer
+            size_hint: [1, 0.5]
             pos_hint_x: 0.5
             text: 'Launch as player (client)'
             on_release: root.launch_as_Player()
 
 
         Separator:
-            rgba: [0.5, 0.5, 0.5, 0.5]
+            id: sep1
+            rgba: (114/255, 137/255, 218/255, 1)
             size_hint_y: None
             height: dp(2)
 
 
-        BoxLayout:
-            orientation: 'horizontal'
+        RelativeLayout:
+            id: botHLayout
 
-            Label :
-                color: [1,1,1,1]
+            Label:
+                id: filePath
+                color: [0,0,0,1]
                 text: root.path
+                size_hint: [0.5,0.5]
+                halign: 'right'
+                multiline: False
+                pos_hint: {'x':0.25,'y':0.7}
+                canvas.before:
+                    Color:
+                        rgba: [1,1,1,1]
+                    Rectangle:
+                        size: self.width*1.5,self.height
+                        pos: filePath.pos
+            Label:
+                id: filePathLabel
+                text: 'File path :'
+                size: self.texture_size
+                text_size: cm(3),cm(2)
+                halign: 'right'
+                size_hint: [0.1, 0.1]
+                pos_hint: {'x':0,'y':1.5}
 
             Button:
-                size_hint: [0.1, 0.1]
+                id: chooseFolder
+                size_hint: [0.5, 0.1]
+                pos_hint: {'x':0.25,'y':0.1}
+                background_color:(153/255,170/255,181/255,0.5)
                 text: 'Choose a game folder'
                 on_release: root.open_file_chooser()
 
 
-        Button:
-            size_hint: [1, 0.1]
+
+        roundedButton:
+            id: launchMaster
+            size_hint: [1, 0.5]
             text: 'Launch as Game Master (server)'
             on_release: root.launch_as_GM()
 
         Separator:
-            rgba: [0.5, 0.5, 0.5, 0.5]
+            id: sep2
+            rgba: (114/255, 137/255, 218/255, 1)
             size_hint_y: None
             height: dp(2)
+
+<roundedButton@Button>
+    background_color:(0,0,0,0)
+    background_normal:''
+    canvas.before:
+        Color:
+            rgba:(153/255,170/255,181/255,0.5)
+        RoundedRectangle:
+            size: self.size
+            pos:self.pos
+            radius:[18]

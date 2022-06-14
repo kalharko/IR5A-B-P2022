@@ -75,6 +75,8 @@ class MainWidget(Widget):
         elif self.gameData.role == 'client':
             self.server = ClientConnection(self.queue_server, self.queue_game)
 
+        self.queue_server.put('Initialisation')
+
         # GameData initialization
         self.gameData.load()
 
@@ -99,7 +101,7 @@ class MainWidget(Widget):
     def update(self, dt): #dt as delta time ?
         while not self.queue_game.empty() :
             work = self.queue_game.get()
-            print(f'working on {work}')
+            print(f'MainWidget working on : {work}')
             self.queue_game.task_done()
 
     def on_stop(self) : #not a kivy function
@@ -109,7 +111,7 @@ class MainWidget(Widget):
             #self.queue_server.join()
         elif self.gameData.role == 'server' :
             self.queue_server.put('msg:Server shutdown')
-            #self.queue_server.put('quit')
+            self.queue_server.put('quit')
             #self.queue_server.join()
 
         # GameData save

@@ -1,11 +1,11 @@
-from kivy.uix.widget import Widget
+from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import (
     NumericProperty, ColorProperty, ReferenceListProperty
 )
 from kivy.clock import Clock
 
 
-class ContextualMenu(Widget):
+class ContextualMenu(BoxLayout):
     x = NumericProperty(0)
     y = NumericProperty(0)
     pos = ReferenceListProperty(x, y)
@@ -15,12 +15,14 @@ class ContextualMenu(Widget):
 
         :return:
         """
+        self.disabled = True
         print("function start_vote ok")
         pass
 
     def change_map(self):
         """
         """
+        self.disabled = True
         print("function change_map ok")
         pass
 
@@ -31,7 +33,13 @@ class ContextualMenu(Widget):
             self.opacity = 1
 
     def test_collision(self, position):
-        if self.collide_point(*position):
-            return self
-        else:
-            return None
+        # Weird hack to click the childrens
+        for w in self.children :
+            if w.collide_point(*position) :
+                try :
+                    if w.text == 'create vote' :
+                        self.start_vote()
+                    elif w.text == 'change map' :
+                        self.change_map()
+                except :
+                    pass #catch when it detect colision with a box layout ? but there is no box layout in self.children...

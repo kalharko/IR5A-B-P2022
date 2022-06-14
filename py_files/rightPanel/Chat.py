@@ -3,6 +3,7 @@ from kivy.uix.widget import Widget
 from kivy.properties import (StringProperty, ObjectProperty, BooleanProperty)
 import os
 
+
 class Chat(Widget):
     gameData = ObjectProperty(None)
     path = StringProperty(os.path.join('Chats', 'general_chat.txt'))

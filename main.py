@@ -22,6 +22,7 @@ import queue
 from py_files.other.FileChooserPopup import FileChooserPopup
 from py_files.other.FirstMenuPopup import FirstMenuPopup
 from py_files.other.GMServer import GMServer
+from py_files.rightPanel.DiceResult import roll_dices
 
 require('2.1.0')
 
@@ -116,10 +117,6 @@ class MainWidget(Widget):
         self.gameSpace.update_token_info()
         self.gameData.save()
         print('mainWidget.gameData.save() Done')
-
-
-
-
 
 
 class VttApp(App):

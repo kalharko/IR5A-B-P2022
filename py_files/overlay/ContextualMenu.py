@@ -16,13 +16,13 @@ class ContextualMenu(Widget):
         :return:
         """
         print("function start_vote ok")
-        pass
+        self.dismiss()
 
     def change_map(self):
         """
         """
         print("function change_map ok")
-        pass
+        self.dismiss()
 
     def on_disabled(self, origin, new_value):
         if self.disabled:

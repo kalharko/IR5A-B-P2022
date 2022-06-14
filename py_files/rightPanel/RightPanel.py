@@ -10,7 +10,7 @@ class RightPanel(Widget):
 
     def load_chats(self, gamepath):
         self.chat.load_messages()
-        self.diceResult.load_messages()
+        # self.diceResult.load_messages()
 
     def on_gameData(self, caller=None, new_value=None):
         self.chat.gameData = self.gameData

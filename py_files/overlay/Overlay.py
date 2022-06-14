@@ -21,4 +21,5 @@ class Overlay(Widget):
             self.contextualMenu.pos = touch.pos
         else:
             self.contextualMenu.test_collision(touch.pos)
+            self.contextualMenu.disabled = True
 

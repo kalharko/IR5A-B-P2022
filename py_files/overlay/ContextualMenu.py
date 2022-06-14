@@ -34,12 +34,12 @@ class ContextualMenu(BoxLayout):
 
     def test_collision(self, position):
         # Weird hack to click the childrens
-        for w in self.children :
-            if w.collide_point(*position) :
-                try :
-                    if w.text == 'create vote' :
+        for w in self.children:
+            if w.collide_point(*position):
+                try:
+                    if w.text == 'create vote':
                         self.start_vote()
-                    elif w.text == 'change map' :
+                    elif w.text == 'change map':
                         self.change_map()
-                except :
-                    pass #catch when it detect colision with a box layout ? but there is no box layout in self.children...
+                except:
+                    pass  # catch when it detect colision with a box layout ? there is no box layout in self.children...

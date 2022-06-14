@@ -109,7 +109,7 @@ class MainWidget(Widget):
         print('MainWidget on_stop')
         if self.gameData.role == 'client' :
             self.queue_server.put('quit')
-            #self.queue_server.join()
+            # self.queue_server.join()
         elif self.gameData.role == 'server' :
             self.queue_server.put('msg:Server shutdown')
             self.queue_server.put('quit')

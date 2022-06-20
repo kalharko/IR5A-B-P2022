@@ -24,6 +24,12 @@ class DiceResult(Widget):
 
 
 def sum_as_string(list_of_ints):
+    """
+    Takes ints and returns the string version of the sum of these ints
+    :param list_of_ints: List of the ints
+    :type list_of_ints: list
+    :return: string of schematized sum
+    """
     sum_string = ''
     for i in list_of_ints:
         sum_string = sum_string + str(i) + '+'
@@ -32,6 +38,12 @@ def sum_as_string(list_of_ints):
 
 
 def interpret_results(results):
+    """
+    Iterates through "results" parameter, and stores results or error if there are some.
+    :param results: the information of all the dice roll information, including the result.
+    :type results: list
+    :return: the messages that have been printed.
+    """
     messages = []
     types_of_dices = {}
     for dice_info in results:
@@ -61,6 +73,11 @@ def interpret_results(results):
 
 
 def parse_command(text):
+    """
+
+    :param text:
+    :return:
+    """
     dices_list = []
     lst = []
     for pos, char in enumerate(text):
@@ -82,6 +99,12 @@ def parse_command(text):
 
 
 def parse_dice_throw(text):
+    """
+
+    :param text: Te command typed by the user
+    :type text: str
+    :return: A list of the parsed commands
+    """
     text.replace(" ", "")
     d_pos = text.find('d')
     if d_pos > 0:
@@ -113,11 +136,24 @@ def parse_dice_throw(text):
                 'you have to put the expression XdX(+X)')
 
 
-def roll_dice(faces):
+def roll_dice(faces: int):
+    """
+
+    :param faces: Number of faces
+    :type faces: int
+    :return: an int of the result of the dice roll
+    """
     return random.randint(1, faces)
 
 
 def roll_dices(dices_list):
+    """
+    This functions take a list of information about dices roll intent,
+     roll the dices for each of them and returns the result
+    :param dices_list: List of dices roll information
+    :type dices_list: list
+    :return: The same list but each member of the list has had the result added to it.
+    """
     results = []
     for list in dices_list:
         number_of_rolls = list[0]

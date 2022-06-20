@@ -76,7 +76,8 @@ def parse_command(text):
     """
 
     :param text:
-    :return:
+    :type text:
+    :return: a list of the
     """
     dices_list = []
     lst = []

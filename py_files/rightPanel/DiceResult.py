@@ -74,10 +74,10 @@ def interpret_results(results):
 
 def parse_command(text):
     """
-
-    :param text:
-    :type text:
-    :return: a list of the
+    This function takes the entire command type by the user and returns each little command that was written
+    :param text: The command typed by the user
+    :type text: str
+    :return: A list of the parsed commands
     """
     dices_list = []
     lst = []
@@ -101,10 +101,10 @@ def parse_command(text):
 
 def parse_dice_throw(text):
     """
-
-    :param text: Te command typed by the user
+    This function takes a dice throw command as a text and parses it into usable data.
+    :param text: A command
     :type text: str
-    :return: A list of the parsed commands
+    :return: the command parsed into a structure of number of dices, faces, and modifier, or an error message.
     """
     text.replace(" ", "")
     d_pos = text.find('d')

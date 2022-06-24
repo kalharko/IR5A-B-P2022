@@ -56,8 +56,9 @@ class GameSpace(Widget):
 
         # Zoom
         if touch.is_mouse_scrolling and self.map.texture != "":
-            if not self.collide_point(*touch.pos) and not self.touch_passed_on:
-                return
+            # if not self.collide_point(*touch.pos) and not self.touch_passed_on:
+            #     print('caca')
+            #     return
 
             direction = 1 if touch.button == 'scrollup' else -1
             factor = 0.1
